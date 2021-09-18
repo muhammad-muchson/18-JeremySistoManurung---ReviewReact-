@@ -1,62 +1,90 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import validasi from "./validasi";
-import {useDispatch} from "react-redux"
+import { Stress } from './Stress';
+import {useDispatch,useSelector} from "react-redux"
 import { tambahData } from '../store/contactSlice';
-import {v4 as uuidv4} from 'uuid'
+import { Link } from 'react-router-dom';
+import Review from './Review';
+
+
+// getting the values of local storage
+const getDatafromLS=()=>{
+  const data = localStorage.getItem('forms');
+  if(data){
+    return JSON.parse(data);
+  }
+  else{
+    return []
+  }
+}
 
 const Contact_Us = () => {
-        const [values, setValues] = useState({
-            firstname : "",
-            email : "",
-            number : "",
-            national : "",
-            pesan : ""
-        });
 
-        const [errors, setErrors] = useState({});
+//   const contacts = useSelector((state) => state.contacts.contacts)
+//     const dispatch = useDispatch()
 
-        const handleChange = (event) =>{
-            setValues({
-                ...values,
-                [event.target.name]: event.target.value, 
-            });
-        };
+//     const[values,setValue] = useState(contacts)
 
-        const handleFormSubmit = (event) => {
-            event.preventDefault();
-            setErrors(validasi(values));
-        }
 
-    // const dispatch = useDispatch()
+//   const handleSubmit = (e) => {
+//               const newData = {
+//                   firstname: values.firstname,
+//                   email: values.email,
+//                   number: values.number,
+//                   national: values.national,
+//                   message: values.pesan
+//               }
+//               dispatch(tambahData(newData));
 
-    // const [userInput, setUserInput] = useState('')
+//     useEffect(() => {
+//         setValue(
+//             {
+//                 firstname: "",
+//                 email: "",
+//                 number: "",
+//                 national: "",
+//                 pesan: "",
+//             }
+//         )
+//         dispatch(tambahData(values));
+//     },[]);
 
-    // const handleChange = (e) => {
-    //     setUserInput(e.currentTarget.value)
-    // }
+// //  // main array of objects state || books state || books array of objects
+  const [forms, setForms]=useState(getDatafromLS());
+
+  // input field states
+  const [title, setTitle]=useState('');
+  const [email, setEmail]=useState('');
+  const [author, setAuthor]=useState('');
+  const [Pnumber, setNumber]=useState('');
+  const [national, setNational]=useState('');
+  const [Ppesan, setPpesan]=useState('');
+  const [firtsname, setFirtsname]=useState('');
+  
+
+  // form submit event
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    // creating an object
+    let Cform={
+      title,
+      email,
+      author,
+      Pnumber,
+      national,
+      Ppesan,
+      firtsname
+    }
+    setForms([...forms,Cform]);
+  }
+
+  // saving data to local storage
+  useEffect(()=>{
+    localStorage.setItem('forms',JSON.stringify(forms));
+  },[forms])
+
     
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     const formIsNotEmpty = userInput === ""
-    //     if(formIsNotEmpty){
-    //         alert("Input Kosong") 
-    //     }
-    //     else{
-    //         const newItem = {
-    //         // id: uuidv4(),
-    //         // task: userInput,
-    //         // complete: false
-    //         id: uuidv4(),
-    //         firstname : "",
-    //         email : "",
-    //         number : "",
-    //         national : "" ,
-    //         pesan : "",
-    //     }
-    //         dispatch(tambahData(newItem))
-    //         setUserInput("") 
-    //     } 
-
+  
 
     return (
     <div className="contact">
@@ -77,45 +105,31 @@ const Contact_Us = () => {
         
         <div className="contact-left m-xl-5">
             <h4>Contact Us</h4>
-            <form onClick={handleFormSubmit}>
-            <div className="form-group ">
-                <label>
-                First Name
-                <span> * </span>
-                </label>
-
-                <input
-                type="text" 
-                className="form-control" 
-                placeholder="Your Full Name Here..."
-                name="firstname"
-                value={values.firstname}
-                onChange={handleChange}
-                />
-
-                {errors.firstname && <p className="error">{errors.firstname}</p>}
-            </div>
-
-            <div className="form-group">
-                <label>
+        <form autoComplete="off" className='form-group'
+          onSubmit={handleSubmit}>
+            <label>Title</label>
+            <input type="text" className='form-control' required
+            onChange={(e)=>setTitle(e.target.value)} value={title}></input>
+            <br></br>
+            <label>
                 Email Address 
                 <span> * </span>
                 </label>
-
                 <input 
                 type="email" 
                 className="form-control" 
                 placeholder="Example@domain.com"
                 name ="email"
-                value={values.email}
-                onChange={handleChange}
-                />
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
+                /><br></br>
 
-                {errors.email && <p className="error">{errors.email}</p>}
-            </div>
+            <label>Author</label>
+            <input type="text" className='form-control' required
+            onChange={(e)=>setAuthor(e.target.value)} value={author}></input>
+            <br></br>
 
-            <div className="form-group">
-                <label>
+              <label>
                 Phone Number
                 <span> * </span>
                 </label>
@@ -125,14 +139,10 @@ const Contact_Us = () => {
                 className="form-control" 
                 placeholder="0857389xxxxx"
                 name="number"
-                value={values.number}
-                onChange={handleChange}
+                value={Pnumber}
+                onChange={(e)=>setNumber(e.target.value)}
                 />
 
-                {errors.number && <p className="error">{errors.number}</p>}
-            </div>
-
-            <div className="form-group">
                 <label>Nationality
                 <span> * </span>
                 </label>
@@ -141,46 +151,53 @@ const Contact_Us = () => {
                 className="form-control" 
                 id="exampleFormControlSelect1"
                 name="national"
-                value={values.national}
-                onChange={handleChange}
+                value={national}
+                onChange={(e)=>setNational(e.target.value)}
                 >
 
-                <option value="1">Indonesia</option>
-                <option value="2">Jepang</option>
-                <option value="3">Canada</option>
-                <option value="4">German</option>
-                <option value="5">USA</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Jepang">Jepang</option>
+                <option value="Canada">Canada</option>
+                <option value="German">German</option>
+                <option value="Usa">USA</option>
                 </select>
-            </div>
 
-            <div className="form-group">
             <label>Message</label>
             <textarea
             className="form-control"
             rows="3"
             name="pesan"
-            value={values.pesan}
-            onChange={handleChange}
-            >
-            </textarea>
-        </div>
-
-        <button 
-        type="button" 
-        className="btn btn-alta mt-4"
-        // onClick={handleFormSubmit}
-        style={{
-            background:'orange',
-            color:'white'
-        }}
-        >
-        Submit
-        </button>
-
-            </form>
+            id="pesanGan"
+            value={Ppesan}
+            onChange={(e)=>setPpesan(e.target.value)}
+            />
+            <label>Nama</label>
+            <input type="text" className='form-control' required
+            onChange={(e)=>setFirtsname(e.target.value)} value={firtsname}></input>
+            <br></br>
+            {/* <Link to="/Stress"> */}
+            <button type="submit" className='btn btn-success btn-md'>
+              ADD
+            </button>
+            {/* </Link> */}
+          </form>
             </div>
+
+  
+        <div className='view-container'>
+          {forms.length>0&&<>
+            <div className='table-responsive'>
+                  <Stress forms={forms} />
+            </div>
+            <button className='btn btn-danger btn-md'
+            onClick={()=>setForms([])}>Remove All</button>
+          </>}
+          {forms.length < 1 && <div>No books are added yet</div>}
+        </div>  
 </div>
-    );
-}
+);
+          }
+
+
 
 export default Contact_Us

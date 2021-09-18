@@ -55,7 +55,7 @@ span{
 .content{
     display: grid;
     position: relative;
-    top: 20%;
+    top: 5%;
     margin-left: 15%;
     grid-template-columns: 0.5fr 0.7fr;
 }

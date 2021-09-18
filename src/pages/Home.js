@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import Jam from "./Jam";
 
 class Home extends React.Component{
     render(){
@@ -66,6 +67,8 @@ class Home extends React.Component{
             </ul>
         </div>
     </nav>
+
+    <Jam/>
     
     <div className="content">
         <div className="content-left">
