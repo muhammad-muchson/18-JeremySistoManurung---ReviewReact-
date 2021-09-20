@@ -30,6 +30,7 @@ function App() {
       <Route path="/Contact_Us" component={Contact_Us} />
       <Route path="/News" component={News} />
       <Route path="/Test" component={Test} />
+      <Route path="/review" component={Review} />
       </Switch>
     </Router>
   

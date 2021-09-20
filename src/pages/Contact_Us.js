@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useHistory } from "react-router-dom";
 import validasi from "./validasi";
 import { Stress } from './Stress';
 import {useDispatch} from "react-redux"
@@ -18,7 +19,9 @@ const getDatafromLS=()=>{
 
 const Contact_Us = () => {
  // main array of objects state || books state || books array of objects
-  const [forms, setForms]=useState(getDatafromLS());
+  // const [forms, setForms]=useState(getDatafromLS());
+  const [forms, setForms]=useState([]);
+  let history = useHistory();
 
   // input field states
   const [email, setEmail]=useState('');
@@ -39,12 +42,16 @@ const Contact_Us = () => {
       Ppesan,
       nama
     }
-    setForms([...forms,Cform]);
+    setForms([Cform]);
+    if(forms.length>0){
+      history.push('/review')
+    }
   }
 
   // saving data to local storage
   useEffect(()=>{
     localStorage.setItem('books',JSON.stringify(forms));
+    
   },[forms])
 
     
@@ -233,7 +240,7 @@ const Contact_Us = () => {
             <input 
             type="text" 
             className='form-control'
-            required
+            // required
             onChange={(e)=>setNama(e.target.value)} 
             value={nama}>
             </input>
@@ -243,12 +250,12 @@ const Contact_Us = () => {
                 <span> * </span>
                 </label>
                 <input 
-                type="email" 
+                // type="email" 
                 className="form-control" 
                 placeholder="Example@domain.com"
                 name ="email"
                 value={email}
-                required
+                // required
                 onChange={(e)=>setEmail(e.target.value)}
                 /><br></br>
 
@@ -263,7 +270,7 @@ const Contact_Us = () => {
                 placeholder="0857389xxxxx"
                 name="number"
                 value={Pnumber}
-                required
+                // required
                 onChange={(e)=>setNumber(e.target.value)}
                 />
 
